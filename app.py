@@ -13,13 +13,13 @@ class App:
         self.root.overrideredirect(1)  # Hide title bar, including min/max/close buttons
         self.root.title("School Management App")
 
-        # Set window icon (optional, if you have an .ico file)
+        # Set window icon (optional)
         try:
-            self.root.iconbitmap("logo.ico")  # Ensure 'logo.ico' is in the same directory as this script
+            self.root.iconbitmap("logo.ico")  # Ensure 'logo.ico' is in the same directory
         except Exception as e:
             print(f"Failed to set icon: {e}")
 
-        # Center the window on the screen and make it non-resizable
+        # Center the window on the screen
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         window_width = 500
@@ -28,11 +28,30 @@ class App:
         position_left = int(screen_width / 2 - window_width / 2)
         self.root.geometry(f"{window_width}x{window_height}+{position_left}+{position_top}")
 
-        # Initialize both frames
+        # Initialize frames
         self.login_frame = LoginWindow(self.root, self.show_register)
         self.register_frame = RegisterWindow(self.root, self.show_login)
 
-        # Check if any accounts exist in the database and hide the "Create Account" button if needed
+        # Database setup
+        self.setup_database()
+
+        # Show login frame by default
+        self.show_login()
+        # Add developer info label
+        self.dev_label = ctk.CTkLabel(
+            self.root, 
+            text="Developer: Iyehah Hacen  |  Contact: 43000038",
+            font=("Arial", 9),
+            text_color="gray"
+        )
+        self.dev_label.pack(side="bottom", pady=3)
+        # Add an exit button
+        self.exit_button = ctk.CTkButton(self.root, text="Exit App", width=50, command=self.exit_app)
+        self.exit_button.pack(side="bottom", pady=(0, 0))  # Adjust padding to fit the developer info label
+        
+
+    def setup_database(self):
+        """Ensure the database is initialized and check if accounts exist."""
         conn = sqlite3.connect("school_account.db")
         cursor = conn.cursor()
         cursor.execute("CREATE TABLE IF NOT EXISTS users (name TEXT, number TEXT UNIQUE, type TEXT, password TEXT)")
@@ -40,15 +59,8 @@ class App:
         account_exists = cursor.fetchone()[0] > 0
         conn.close()
 
-        # Pass the account existence status to the login frame
+        # Pass account existence status to the login frame
         self.login_frame.set_account_exists(account_exists)
-
-        # Show the login frame by default
-        self.show_login()
-
-        # Exit App Button (Add this to quit the app and re-run app.py)
-        self.exit_button = ctk.CTkButton(self.root, text="Exit App", width=50, command=self.exit_app)
-        self.exit_button.pack(side="bottom", pady=10)
 
     def show_login(self):
         """Show the login frame and hide the register frame."""
@@ -60,24 +72,25 @@ class App:
         self.login_frame.pack_forget()
         self.register_frame.pack(fill="both", expand=True)
 
-    def exit_app(self):        
-        # Close the Tkinter window and quit the app
+    def exit_app(self):
+        """Exit the application gracefully."""
         self.root.quit()
         self.root.destroy()
-        # Exit the current Python process
         sys.exit()
 
     def run(self):
+        """Run the application."""
         self.root.mainloop()
 
+
 def show_loading_screen():
-    """Display a loading screen with an image for 5 seconds."""
+    """Display a loading screen with a logo image."""
     loading = ctk.CTk()
     loading.geometry("300x300")
-    loading.overrideredirect(1)  # Hide the title bar
+    loading.overrideredirect(1)  # Hide title bar
     loading.title("Loading...")
 
-    # Center the loading window on the screen
+    # Center the loading window
     screen_width = loading.winfo_screenwidth()
     screen_height = loading.winfo_screenheight()
     window_width = 300
@@ -86,30 +99,27 @@ def show_loading_screen():
     position_left = int(screen_width / 2 - window_width / 2)
     loading.geometry(f"{window_width}x{window_height}+{position_left}+{position_top}")
 
-    # Load and display the image
+    # Load and display the logo image
     try:
         logo_image = Image.open("logo.png")  # Ensure 'logo.png' is in the same directory
-        # Resize the image to fill the entire window size
         logo_image = logo_image.resize((window_width, window_height))
-        
-        # Convert the PIL Image to a CTkImage
         logo_photo = ctk.CTkImage(logo_image, size=(window_width, window_height))
 
-        # Display the image in the loading window
         logo_label = ctk.CTkLabel(loading, image=logo_photo, text="")
-        logo_label.image = logo_photo  # Keep a reference to avoid garbage collection
-        logo_label.pack(fill="both", expand=True)  # Make sure the label expands to fill the window
-
+        logo_label.image = logo_photo  # Keep reference to avoid garbage collection
+        logo_label.pack(fill="both", expand=True)
     except Exception as e:
         print(f"Failed to load logo image: {e}")
 
-    # Keep the loading screen open for 5 seconds
+    # Display the loading screen for 2 seconds
     loading.update()
-    loading.after(5000, loading.destroy)  # Destroy the loading screen after 5 seconds
+    loading.after(2000, loading.destroy)
     loading.mainloop()
 
+
 if __name__ == "__main__":
-    # Show loading screen for 5 seconds
+    # Show loading screen
     show_loading_screen()
-    # Start the main application
+
+    # Run the application
     App().run()

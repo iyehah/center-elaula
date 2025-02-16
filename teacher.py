@@ -1,5 +1,7 @@
 import customtkinter as ctk
 import sqlite3
+from tkinter import messagebox
+
 
 class TeacherTab(ctk.CTkFrame):
     def __init__(self, root):
@@ -20,20 +22,24 @@ class TeacherTab(ctk.CTkFrame):
         self.conn.commit()
 
         # Cadre de recherche et de filtre
-        self.search_frame = ctk.CTkFrame(self)
+        self.search_frame = ctk.CTkFrame(self,fg_color="#DBDBDB")
         self.search_frame.grid(row=0, column=0, padx=10, pady=10, columnspan=2, sticky="nsew")
         
         # Champ de recherche
-        self.search_entry = ctk.CTkEntry(self.search_frame, placeholder_text="Rechercher par nom")
+        self.search_entry = ctk.CTkEntry(self.search_frame, width=300, placeholder_text="Rechercher par nom")
         self.search_entry.grid(row=0, column=0, padx=5, pady=5)
         self.search_entry.bind("<KeyRelease>", self.filter_teachers)
         
         # Filtre par classe
-        self.class_filter = ctk.CTkComboBox(self.search_frame, values=["Tous", "3As", "4As", "5C", "5D", "6C", "6D", "7C", "7D"])
+        self.class_filter = ctk.CTkOptionMenu(self.search_frame,fg_color="white",button_color="#4285F4",dropdown_fg_color="white",dropdown_hover_color="#4285F4",text_color="black",width=200, values=["Tous", "3As", "4As", "5C", "5D", "6C1","6C2", "6D", "7C", "7D1","7D2","P.E","S.C","English","Français"])
         self.class_filter.set("Tous")
         self.class_filter.grid(row=0, column=1, padx=5, pady=5)
         self.class_filter.bind("<<ComboboxSelected>>", self.filter_teachers)
         
+        # "Filtre par classe" button
+        self.filter_button = ctk.CTkButton(self.search_frame,fg_color="#4285F4", text="Filtrer par classe", command=self.filter_teachers)
+        self.filter_button.grid(row=0, column=2, padx=5, pady=5)
+
         # Cadre pour le tableau des enseignants
         self.table_frame = ctk.CTkFrame(self)
         self.table_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
@@ -42,7 +48,7 @@ class TeacherTab(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)  # Cela permet au tableau de prendre 80 % de la largeur de la fenêtre
         
         # Créer un cadre défilable pour le contenu du tableau
-        self.scrollable_frame = ctk.CTkScrollableFrame(self.table_frame, width=970, height=360)
+        self.scrollable_frame = ctk.CTkScrollableFrame(self.table_frame, width=970, height=500,fg_color="#CFCFCF")
         self.scrollable_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
         # En-têtes du tableau
@@ -55,7 +61,7 @@ class TeacherTab(ctk.CTkFrame):
         
         # Ajouter les étiquettes d'en-tête
         for col, header in enumerate(self.headers):
-            header_label = ctk.CTkLabel(self.scrollable_frame, text=header, font=("Arial", 12, "bold"), padx=5, pady=5, fg_color="#1f6aa5")
+            header_label = ctk.CTkLabel(self.scrollable_frame, text=header, font=("Arial", 12, "bold"), padx=5, pady=5,text_color="white", fg_color="#4285F4")
             header_label.grid(row=0, column=col, sticky="nsew")
 
         # Étiquette en bas pour afficher le nombre d'enseignants
@@ -123,8 +129,14 @@ class TeacherTab(ctk.CTkFrame):
         self.add_teacher_form.load_teacher_data(teacher_id)
 
     def delete_teacher(self, teacher_id):
-        self.cursor.execute("DELETE FROM teachers WHERE id = ?", (teacher_id,))
-        self.conn.commit()
+        confirmation = messagebox.askyesno("Confirmation", "Êtes-vous sûr de vouloir supprimer cet enseignant ?")
+        if confirmation:  # Si l'utilisateur confirme
+            # Logique pour supprimer l'enseignant
+            self.cursor.execute("DELETE FROM teachers WHERE id = ?", (teacher_id,))
+            self.conn.commit()
+            messagebox.showinfo("Succès", "Enseignant supprimé avec succès.")
+        else:
+            messagebox.showinfo("Annulé", "La suppression a été annulée.")
         self.display_teachers()  # Actualiser le tableau
 
 class AddTeacherForm(ctk.CTkFrame):
@@ -141,8 +153,8 @@ class AddTeacherForm(ctk.CTkFrame):
         self.name_entry = ctk.CTkEntry(self, placeholder_text="Nom")
         self.name_entry.grid(row=1, column=0, padx=5, pady=5)
         
-        self.class_entry = ctk.CTkComboBox(self, values=["3As", "4As", "5C", "5D", "6C", "6D", "7C", "7D"])
-        self.class_entry.set("Sélectionner la classe")
+        self.class_entry = ctk.CTkOptionMenu(self,fg_color="white",button_color="#4285F4",dropdown_fg_color="white",dropdown_hover_color="#4285F4",text_color="black",values=["3As", "4As", "5C", "5D", "6C1","6C2", "6D", "7C", "7D1","7D2","P.E","S.C","English","Français"])
+        self.class_entry.set("")
         self.class_entry.grid(row=1, column=1, padx=5, pady=5)
         
         self.subject_entry = ctk.CTkEntry(self, placeholder_text="Matière")
@@ -158,7 +170,7 @@ class AddTeacherForm(ctk.CTkFrame):
         self.percentage_entry.grid(row=3, column=1, padx=5, pady=5)
         
         # Bouton Enregistrer
-        self.add_button = ctk.CTkButton(self, text="Enregistrer", command=self.save_teacher)
+        self.add_button = ctk.CTkButton(self,fg_color="#4285F4", text="Enregistrer", command=self.save_teacher)
         self.add_button.grid(row=4, column=0, columnspan=2, pady=10)
 
     def load_teacher_data(self, teacher_id):
@@ -202,12 +214,15 @@ class AddTeacherForm(ctk.CTkFrame):
             )
             self.teacher_id = None
             self.label.configure(text="Enregistrer un nouvel enseignant")
+            messagebox.showinfo("Succès", "Enseignant modifié avec succès.")
         else:
             # Insérer un nouvel enregistrement d'enseignant
             self.parent.cursor.execute(
                 '''INSERT INTO teachers (name, class, subject, salary, number, percentage) VALUES (?, ?, ?, ?, ?, ?)''',
                 teacher_data
             )
+            messagebox.showinfo("Succès", "Enseignant ajouté avec succès.")
+
         
         self.parent.conn.commit()
         self.parent.display_teachers()  # Actualiser le tableau des enseignants
@@ -216,7 +231,7 @@ class AddTeacherForm(ctk.CTkFrame):
     def clear_form(self):
         """Effacer les champs du formulaire."""
         self.name_entry.delete(0, "end")
-        self.class_entry.set("Sélectionner la classe")
+        self.class_entry.set("")
         self.subject_entry.delete(0, "end")
         self.salary_entry.delete(0, "end")
         self.number_entry.delete(0, "end")

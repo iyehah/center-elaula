@@ -25,11 +25,11 @@ class LoginWindow(ctk.CTkFrame):
         self.buttons_frame.pack(pady=20, fill="x")
 
         # Login button
-        self.login_button = ctk.CTkButton(self.buttons_frame, text="Se connecter", command=self.login)
+        self.login_button = ctk.CTkButton(self.buttons_frame,fg_color="#4285F4", text="Se connecter", command=self.login)
         self.login_button.pack(pady=10)
 
         # Account creation button
-        self.create_account_button = ctk.CTkButton(self.buttons_frame, text="Créer un compte", fg_color="transparent",
+        self.create_account_button = ctk.CTkButton(self.buttons_frame,text_color="gray", text="Créer un compte", fg_color="transparent",
                                                    border_width=1, border_color="#565b5e", command=self.go_to_register)
         self.create_account_button.pack(pady=10)
 
