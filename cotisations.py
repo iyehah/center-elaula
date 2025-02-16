@@ -20,7 +20,7 @@ class CotisationsRaport(ctk.CTkFrame):
         self.options_frame.pack(pady=10, padx=10, anchor="w")
 
         # Label for the options frame
-        self.options_label = ctk.CTkLabel(self.options_frame, text="Rapport des Enseignants", font=("Arial", 18))
+        self.options_label = ctk.CTkLabel(self.options_frame, text="Rapport des Enseignants", font=("Arial", 12))
         self.options_label.grid(row=0, column=0, padx=10, pady=(10, 5), sticky="w")
 
         # Dropdown for selecting class
@@ -43,7 +43,7 @@ class CotisationsRaport(ctk.CTkFrame):
 
     def fetch_teacher_data(self, selected_class):
         # Connect to the database to fetch teacher data
-        conn = sqlite3.connect('teacher_school.db')
+        conn = sqlite3.connect('./db/teacher_school.db')
         cursor = conn.cursor()
 
         if selected_class == "Tous":
@@ -68,7 +68,7 @@ class CotisationsRaport(ctk.CTkFrame):
         pdf = SimpleDocTemplate(self.pdf_path, pagesize=letter, topMargin=5, bottomMargin=5, leftMargin=5, rightMargin=5)
         
         # Fetch school name for the header
-        conn = sqlite3.connect('school_account.db')
+        conn = sqlite3.connect('./db/school_account.db')
         cursor = conn.cursor()
         cursor.execute("SELECT name FROM users LIMIT 1")
         school_name = cursor.fetchone()[0]

@@ -1,0 +1,4 @@
+python -m unittest test/test_app.py (not completed)
+python -m unittest test/test_school_databases.py
+
+pyinstaller --onefile --windowed --icon=logo.ico --add-data "school_account.db;." --add-data "student_school.db;." --add-data "teacher_school.db;." --add-data "logo.png;." --add-data "costs_school.db;." --add-data "Amiri-Regular.ttf;." app.py

@@ -6,13 +6,13 @@ class MainLayout(ctk.CTkFrame):
         super().__init__(root)
 
         # Database connections
-        self.conn_students = sqlite3.connect("student_school.db")
+        self.conn_students = sqlite3.connect("./db/student_school.db")
         self.cursor_students = self.conn_students.cursor()
 
-        self.conn_teachers = sqlite3.connect("teacher_school.db")
+        self.conn_teachers = sqlite3.connect("./db/teacher_school.db")
         self.cursor_teachers = self.conn_teachers.cursor()
 
-        self.conn_costs = sqlite3.connect("costs_school.db")
+        self.conn_costs = sqlite3.connect("./db/costs_school.db")
         self.cursor_costs = self.conn_costs.cursor()
 
         # Calculate totals

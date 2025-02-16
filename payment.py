@@ -20,7 +20,7 @@ class PaymentReport(ctk.CTkFrame):
         self.options_frame.pack(pady=10, padx=10, anchor="w")
 
         # Label for the options frame
-        self.options_label = ctk.CTkLabel(self.options_frame, text="Rapport des paiements", font=("Arial", 18))
+        self.options_label = ctk.CTkLabel(self.options_frame, text="Rapport des paiements", font=("Arial", 12))
         self.options_label.grid(row=0, column=0, padx=10, pady=(10, 5), sticky="w")
 
         # Dropdown for selecting class (optional for payment report)
@@ -43,17 +43,17 @@ class PaymentReport(ctk.CTkFrame):
 
     def fetch_payment_data(self, selected_class):
         # Connect to the database to fetch student payment data
-        conn = sqlite3.connect('student_school.db')
+        conn = sqlite3.connect('./db/student_school.db')
         cursor = conn.cursor()
 
         if selected_class == "Tous":
             cursor.execute("""
-                SELECT name, subject, date_register, parent_number, price, date_pay 
+                SELECT name, class, subject, date_register, price, date_pay 
                 FROM students
             """)
         else:
             cursor.execute("""
-                SELECT name, subject, date_register, parent_number, price, date_pay 
+                SELECT name, class, subject, date_register, price, date_pay 
                 FROM students WHERE class=?
             """, (selected_class,))
 
@@ -75,7 +75,7 @@ class PaymentReport(ctk.CTkFrame):
                                 topMargin=5, bottomMargin=5, leftMargin=5, rightMargin=5)
 
         # Fetch school name for the header
-        conn = sqlite3.connect('school_account.db')
+        conn = sqlite3.connect('./db/school_account.db')
         cursor = conn.cursor()
         cursor.execute("SELECT name FROM users LIMIT 1")
         school_name = cursor.fetchone()[0]
@@ -98,7 +98,7 @@ class PaymentReport(ctk.CTkFrame):
         ]))
 
         # Table headers
-        data = [["Nom", "Matière", "Date Inscription", "Numéro Parent", "Prix", "Date Paiement", "Statut"]]
+        data = [["Nom", "Class","Matière", "Date Inscription", "Prix", "Date Paiement", "Statut"]]
 
         # Add payment data to the table
         total_price = 0
