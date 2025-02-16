@@ -1,6 +1,6 @@
-# El Mosaeid
+# Center Elaoula (school management system)
 
-**El Mosaeid** is a desktop application designed to facilitate the management of schools and their resources. It provides tools for handling student and teacher information, financial records, attendance tracking, and more. This application aims to streamline administrative processes and enhance productivity in educational institutions.
+**Elaoula** is a desktop application designed to facilitate the management of schools and their resources. It provides tools for handling student and teacher information, financial records, attendance tracking, and more. This application aims to streamline administrative processes and enhance productivity in educational institutions.
 
 ---
 
@@ -22,7 +22,7 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/iyehah/Mosaeid.git
+   git clone https://github.com/iyehah/center-elaula.git
    cd Mosaeid
    ```
 2. Install dependencies (if any):
