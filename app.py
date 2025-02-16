@@ -3,19 +3,20 @@ import sys
 import time
 from PIL import Image
 import sqlite3
-from login import LoginWindow
-from signin import RegisterWindow
+from auth.login import LoginWindow
+from auth.signin import RegisterWindow
 
 class App:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.geometry("500x400")
-        self.root.overrideredirect(1)  # Hide title bar, including min/max/close buttons
-        self.root.title("School Management App")
+        # self.root.overrideredirect(1)  # Hide title bar, including min/max/close buttons
+        self.root.resizable(False,False)
+        self.root.title("El Mosaeid")
 
         # Set window icon (optional)
         try:
-            self.root.iconbitmap("logo.ico")  # Ensure 'logo.ico' is in the same directory
+            self.root.iconbitmap("./img/logo.ico")  # Ensure 'logo.ico' is in the same directory
         except Exception as e:
             print(f"Failed to set icon: {e}")
 
@@ -45,14 +46,11 @@ class App:
             text_color="gray"
         )
         self.dev_label.pack(side="bottom", pady=3)
-        # Add an exit button
-        self.exit_button = ctk.CTkButton(self.root, text="Exit App", width=50, command=self.exit_app)
-        self.exit_button.pack(side="bottom", pady=(0, 0))  # Adjust padding to fit the developer info label
         
 
     def setup_database(self):
         """Ensure the database is initialized and check if accounts exist."""
-        conn = sqlite3.connect("school_account.db")
+        conn = sqlite3.connect("./db/school_account.db")
         cursor = conn.cursor()
         cursor.execute("CREATE TABLE IF NOT EXISTS users (name TEXT, number TEXT UNIQUE, type TEXT, password TEXT)")
         cursor.execute("SELECT COUNT(*) FROM users")
@@ -72,12 +70,7 @@ class App:
         self.login_frame.pack_forget()
         self.register_frame.pack(fill="both", expand=True)
 
-    def exit_app(self):
-        """Exit the application gracefully."""
-        self.root.quit()
-        self.root.destroy()
-        sys.exit()
-
+    
     def run(self):
         """Run the application."""
         self.root.mainloop()
@@ -101,7 +94,7 @@ def show_loading_screen():
 
     # Load and display the logo image
     try:
-        logo_image = Image.open("logo.png")  # Ensure 'logo.png' is in the same directory
+        logo_image = Image.open("./img/logo.png")  # Ensure 'logo.png' is in the same directory
         logo_image = logo_image.resize((window_width, window_height))
         logo_photo = ctk.CTkImage(logo_image, size=(window_width, window_height))
 
@@ -113,7 +106,7 @@ def show_loading_screen():
 
     # Display the loading screen for 2 seconds
     loading.update()
-    loading.after(2000, loading.destroy)
+    loading.after(5000, loading.destroy)
     loading.mainloop()
 
 
