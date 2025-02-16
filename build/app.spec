@@ -5,7 +5,7 @@ a = Analysis(
     ['app.py'],
     pathex=[],
     binaries=[],
-    datas=[('school_account.db', '.'), ('student_school.db', '.'), ('teacher_school.db', '.'), ('logo.png', '.')],
+    datas=[('school_account.db', '.'), ('student_school.db', '.'), ('teacher_school.db', '.'), ('logo.png', '.'), ('costs_school.db', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

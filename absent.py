@@ -24,7 +24,7 @@ class AbcentReport(ctk.CTkFrame):
 
         # Dropdown for selecting class (without "All")
         self.class_var = ctk.StringVar(value="3As")  # Default class selected
-        class_options = ["3As", "4As", "5C", "5D", "6C", "6D", "7C", "7D"]
+        class_options = values=["3As", "4As", "5C", "5D", "6C1","6C2", "6D", "7C", "7D1","7D2","P.E","S.C","English","Français"]
         self.class_select = ctk.CTkOptionMenu(self.options_frame, values=class_options, variable=self.class_var)
         self.class_select.grid(row=1, column=0, padx=10, pady=5, sticky="w")
 
@@ -73,7 +73,7 @@ class AbcentReport(ctk.CTkFrame):
         # Header content (in French)
         title_text = [
             [school_name],
-            [f"Rapport des absences des étudiants - {selected_class}"],  # Include the selected class in the header
+            [f"Formulaire des absences des étudiants - {selected_class}"],  # Include the selected class in the header
             [f"Date: {current_date} - {current_weekday}"]
         ]
 
@@ -101,14 +101,14 @@ class AbcentReport(ctk.CTkFrame):
 
         # Apply style to the table
         table.setStyle(TableStyle([  
-            ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
             ('FONTSIZE', (0, 0), (-1, 0), 10),
             ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
             ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey])
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.white])
         ]))
 
         # Build the PDF with the title and table

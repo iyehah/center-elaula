@@ -7,6 +7,7 @@ import datetime
 import subprocess
 import sys
 import os
+from reportlab.platypus import Spacer
 
 class PaymentReport(ctk.CTkFrame):
     def __init__(self, root):
@@ -23,8 +24,8 @@ class PaymentReport(ctk.CTkFrame):
         self.options_label.grid(row=0, column=0, padx=10, pady=(10, 5), sticky="w")
 
         # Dropdown for selecting class (optional for payment report)
-        self.class_var = ctk.StringVar(value="All")
-        class_options = ["All", "3As", "4As", "5C", "5D", "6C", "6D", "7C", "7D"]
+        self.class_var = ctk.StringVar(value="Tous")
+        class_options = values=["Tous", "3As", "4As", "5C", "5D", "6C1","6C2", "6D", "7C", "7D1","7D2","P.E","S.C","English","Français"]
         self.class_select = ctk.CTkOptionMenu(self.options_frame, values=class_options, variable=self.class_var)
         self.class_select.grid(row=1, column=0, padx=10, pady=5, sticky="w")
 
@@ -45,14 +46,14 @@ class PaymentReport(ctk.CTkFrame):
         conn = sqlite3.connect('student_school.db')
         cursor = conn.cursor()
 
-        if selected_class == "All":
+        if selected_class == "Tous":
             cursor.execute("""
-                SELECT name, subject, date_register, parent_number, price, discount, date_pay 
+                SELECT name, subject, date_register, parent_number, price, date_pay 
                 FROM students
             """)
         else:
             cursor.execute("""
-                SELECT name, subject, date_register, parent_number, price, discount, date_pay 
+                SELECT name, subject, date_register, parent_number, price, date_pay 
                 FROM students WHERE class=?
             """, (selected_class,))
 
@@ -97,34 +98,71 @@ class PaymentReport(ctk.CTkFrame):
         ]))
 
         # Table headers
-        data = [["Nom", "Matière", "Date Inscription", "Numéro Parent", "Escompte", "Prix", "Date Paiement", "Statut"]]
+        data = [["Nom", "Matière", "Date Inscription", "Numéro Parent", "Prix", "Date Paiement", "Statut"]]
 
         # Add payment data to the table
+        total_price = 0
+        total_paid = 0
+        total_unpaid = 0
+
         for student in payment_data:
             price = student[4]  # Price field from the database
-            status = "Payée" if price >= 0 else "Non Payée"
-            data.append([student[0], student[1], student[2], student[3], student[5], student[4], student[6], status])
+            status = "Payée" if price > 0 else "Non Payée"
+            data.append([student[0], student[1], student[2], student[3], student[4], student[5], status])
+
+            # Update totals
+            total_price += price
+            if price > 0:
+                total_paid += 1
+            else:
+                total_unpaid += 1
 
         # Calculate the maximum width for each column
         col_widths = [max([len(str(row[i])) for row in data]) * 6 for i in range(len(data[0]))]
-        
-        # Create the table with dynamic column widths
-        table = Table(data, colWidths=col_widths)
 
-        # Apply style to the table
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        # Create the main table with dynamic column widths
+        main_table = Table(data, colWidths=col_widths)
+
+        # Apply style to the main table
+        main_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
             ('FONTSIZE', (0, 0), (-1, 0), 10),
             ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
             ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey])
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.white]),
         ]))
 
-        # Build the PDF with the title and table
-        elements = [title_table, table]
+        # Summary section below the main table
+        summary_data = [
+            ["Résumé des paiements", "", ""],
+            ["Total des prix", "Total Payées", "Total Non Payées"],
+            [f"{total_price}", f"{total_paid}", f"{total_unpaid}"]
+        ]
+
+        # Create the summary table with column headers
+        summary_table = Table(summary_data, colWidths=[180, 180, 180])
+        summary_table.setStyle(TableStyle([
+            ('SPAN', (0, 0), (-1, 0)),  # Span the title row across all columns
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTNAME', (0, 1), (-1, 1), 'Helvetica-Bold'),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),  # Background color for title row
+            ('BACKGROUND', (0, 1), (-1, 1), colors.lightgrey),  # Background color for header row
+            ('TEXTCOLOR', (0, 1), (-1, 1), colors.black),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTSIZE', (0, 0), (-1, 1), 12),
+            ('FONTSIZE', (0, 2), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+            ('TOPPADDING', (0, 2), (-1, 2), 6)
+        ]))
+        # Add a spacer between the main table and the summary table
+        spacer = Spacer(1, 12)  # Adjust the 12 to the desired amount of space (in points)
+
+        # Build the PDF with the title, main table, and summary
+        elements = [title_table, main_table, spacer, summary_table]
         pdf.build(elements)
 
         # Enable the download button after generating the PDF

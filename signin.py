@@ -17,23 +17,23 @@ class RegisterWindow(ctk.CTkFrame):
         self.number_entry = ctk.CTkEntry(self, placeholder_text="Numéro scolaire", width=450)
         self.number_entry.pack(pady=5)
 
-        self.type_entry = ctk.CTkComboBox(self, values=["École", "Centre"], width=450)
+        self.type_entry = ctk.CTkOptionMenu(self,fg_color="white",button_color="#4285F4",dropdown_fg_color="white",dropdown_hover_color="#4285F4",text_color="black", values=["École", "Centre"], width=450)
         self.type_entry.pack(pady=5)
 
-        self.password_entry = ctk.CTkEntry(self, placeholder_text="Mot de passe", show="*", width=450)
+        self.password_entry = ctk.CTkEntry(self, placeholder_text="Mot de passe", show="•", width=450)
         self.password_entry.pack(pady=5)
 
-        self.password_again_entry = ctk.CTkEntry(self, placeholder_text="Répéter le mot de passe", show="*", width=450)
+        self.password_again_entry = ctk.CTkEntry(self, placeholder_text="Répéter le mot de passe", show="•", width=450)
         self.password_again_entry.pack(pady=5)
 
         # Cadre des boutons
         self.buttons_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.buttons_frame.pack(padx=90, pady=10, fill="x")
         # Bouton retour à la connexion
-        self.back_to_login_button = ctk.CTkButton(self.buttons_frame, text="Retour à la connexion", fg_color="transparent", border_width=1, border_color="#565b5e", command=self.go_to_login)
+        self.back_to_login_button = ctk.CTkButton(self.buttons_frame,text_color="gray", text="Retour à la connexion", fg_color="transparent", border_width=1, border_color="#565b5e", command=self.go_to_login)
         self.back_to_login_button.pack(side="left", padx=10)
         # Bouton Créer un compte
-        self.register_button = ctk.CTkButton(self.buttons_frame, text="Créer un compte", command=self.register)
+        self.register_button = ctk.CTkButton(self.buttons_frame,fg_color="#4285F4", text="Créer un compte", command=self.register)
         self.register_button.pack(side="right", padx=10)
 
     def register(self):
