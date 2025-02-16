@@ -1,5 +1,5 @@
 document.getElementById("downloadBtn").addEventListener("click", function() {
-    window.location.href = "/build/Center Elaoula.msi";
+    window.location.href = "https://github.com/iyehah/school-management/releases/download/v1.2.0/Center.Elaoula.msi";
 });
 let currentIndex = 0;
 const slides = document.querySelectorAll(".slide");
