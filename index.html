@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/ionicons@5.5.2/dist/css/ionicons.min.css">
+    <link rel="shortcut icon" href="img/logo.ico" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <img src="img/logo.png" alt="School Management App Logo" style="height: 50px;">
+        <h1>Center Elaoula</h1>
+        <p>Efficiently manage your school with our powerful application.</p>
+        <button id="downloadBtn"><i class="ion-ios-download"></i>Download</button>
+    </header>
+    
+    <main>
+        <section id="about">
+           <div class="description">
+            <h2>About This App</h2>
+            <p>Our school management system helps in managing students, teachers, finances, and reports efficiently.</p>
+            <ul>
+                <li>📊 Student & Teacher Management</li>
+                <li>💰 Financial Tracking</li>
+                <li>📈 Reports & Statistics</li>
+                <li>⚡ User-friendly Interface</li>
+            </ul>
+           </div>
+            <div class="glary">
+                <div class="glary-slider">
+                    <button id="prevBtn" class="btn"><i class="ion-ios-arrow-back"></i> Previous</button>
+                    <img src="img/slide1.png" alt="Slide 1" class="slide" style="width: 100%; max-width: 600px;">
+                    <img src="img/slide2.png" alt="Slide 2" class="slide" style="width: 100%; max-width: 600px; display: none;">
+                    <img src="img/slide3.png" alt="Slide 3" class="slide" style="width: 100%; max-width: 600px; display: none;">
+                    <img src="img/slide4.png" alt="Slide 4" class="slide" style="width: 100%; max-width: 600px; display: none;">
+                    <img src="img/slide5.png" alt="Slide 5" class="slide" style="width: 100%; max-width: 600px; display: none;">
+                    <button id="nextBtn" class="btn">Next <i class="ion-ios-arrow-forward"></i></button>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 School Management App. All rights reserved.</p>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
