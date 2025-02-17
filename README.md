@@ -1,7 +1,6 @@
 # Center Elaoula (school management system)
 
-**Elaoula** is a desktop application designed to facilitate the management of schools and their resources. It provides tools for handling student and teacher information, financial records, attendance tracking, and more. This application aims to streamline administrative processes and enhance productivity in educational institutions.
-
+It is a desktop application designed for the "Elaoula Center", offering various features such as a student and teacher registration system, an accounting system, and a data analysis system to evaluate the center's performance over the month or week. The application also generates financial reports, invoices, and absence reports, and notifies guardians about absences.
 ---
 
 ## Features
