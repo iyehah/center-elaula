@@ -424,7 +424,8 @@ class StudentTab(ctk.CTkFrame):
                     pywhatkit.sendwhatmsg_instantly(full_number, message)
                     print(f"Message envoyé avec succès à {full_number}.")
                 except Exception as e:
-                    print(f"Échec de l'envoi du message à {full_number} : {e}")
+                    masked_number = full_number[:3] + "****" + full_number[-2:]
+                    print(f"Échec de l'envoi du message à {masked_number} : {e}")
 
     
 class AddStudentForm(ctk.CTkFrame):
